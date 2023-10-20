@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku/providers/selected_item_provider.dart';
 
 const radius = Radius.circular(15);
 
@@ -9,12 +10,17 @@ const Map<String, BorderRadius?> itemBorderMapping = {
   '88': BorderRadius.only(bottomRight: radius),
 };
 
+const neighboringColor = Color(0xFFD4E2FF);
+const selectedColor = Color(0xFFABC5FE);
+const oddCellGroupColor = Color.fromARGB(255, 225, 225, 225);
+const selectedTextColor = Color(0xFF0d31f9);
+
 const strongBorder = BorderSide(
   color: Colors.black,
   width: 2,
 );
 const lightBorder = BorderSide(
-  color: Color.fromARGB(255, 206, 206, 206),
+  color: Color.fromARGB(175, 150, 150, 150),
   width: 1,
 );
 const invisibleBorder = BorderSide.none;
@@ -22,6 +28,24 @@ const invisibleBorder = BorderSide.none;
 class SudokuUtils {
   static bool _isCornerItem(int row, int column) {
     return (row == 0 || row == 8) && (column == 0 || column == 8);
+  }
+
+  static int _getCellGroupNumber(int row, int column) {
+    if (row >= 0 && row <= 2) {
+      if (column >= 0 && column <= 2) return 0;
+      if (column >= 3 && column <= 5) return 1;
+      return 2;
+    }
+
+    if (row >= 3 && row <= 5) {
+      if (column >= 0 && column <= 2) return 3;
+      if (column >= 3 && column <= 5) return 4;
+      return 5;
+    }
+
+    if (column >= 0 && column <= 2) return 6;
+    if (column >= 3 && column <= 5) return 7;
+    return 8;
   }
 
   static BorderRadius? getBorderRadius(int row, int column) {
@@ -58,5 +82,35 @@ class SudokuUtils {
       bottom: _getBottomBorder(row, column),
       right: _getRightBorder(row, column),
     );
+  }
+
+  static Color? getCellBackground(int row, int column, SudokuCell selected) {
+    final int selectedCellGroupNumber =
+        _getCellGroupNumber(selected.row, selected.column);
+    final int currentCellGroupNumber = _getCellGroupNumber(row, column);
+
+    if (selected.column == column && selected.row == row) {
+      return selectedColor;
+    }
+
+    if (selectedCellGroupNumber == currentCellGroupNumber) {
+      return neighboringColor;
+    }
+
+    if (selected.column == column || selected.row == row) {
+      return neighboringColor;
+    }
+    if (currentCellGroupNumber % 2 == 0) {
+      return oddCellGroupColor;
+    }
+
+    return null;
+  }
+
+  static Color? getCellTextColor(int row, int column, SudokuCell selected) {
+    if (selected.row == row && selected.column == column) {
+      return selectedTextColor;
+    }
+    return null;
   }
 }
