@@ -17,10 +17,7 @@ const lightBorder = BorderSide(
   color: Color.fromARGB(255, 206, 206, 206),
   width: 1,
 );
-const invisibleBorder = BorderSide(
-  color: Colors.white,
-  width: 1,
-);
+const invisibleBorder = BorderSide.none;
 
 class SudokuUtils {
   static bool _isCornerItem(int row, int column) {

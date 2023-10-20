@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku/data/sudoku_data.dart';
+import 'package:sudoku/utils/sudoku_utils.dart';
 import 'package:sudoku/widgets/sudoku_table_item.dart';
 
 class SudokuTable extends StatefulWidget {
@@ -43,7 +44,7 @@ class _SudokuTableState extends State<SudokuTable> {
           width: 2,
         ),
         borderRadius: const BorderRadius.all(
-          Radius.circular(15),
+          radius,
         ),
       ),
       child: Column(

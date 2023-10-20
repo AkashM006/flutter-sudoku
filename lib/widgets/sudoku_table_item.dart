@@ -20,22 +20,31 @@ class SudokuTableItem extends StatefulWidget {
 }
 
 class _SudokuTableItemState extends State<SudokuTableItem> {
+  void _touchHandler() {
+    // need to highlight some cells based on some condition
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        alignment: Alignment.center,
-        height: 50,
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          border: SudokuUtils.getBorder(widget.row, widget.column),
-          borderRadius: SudokuUtils.getBorderRadius(widget.row, widget.column),
-        ),
-        child: Text(
-          widget.itemValue == '0' ? '' : widget.itemValue,
-          textAlign: TextAlign.center,
-          style: const TextStyle()
-              .copyWith(fontSize: 26, fontWeight: FontWeight.w400),
+      child: InkWell(
+        borderRadius: SudokuUtils.getBorderRadius(widget.row, widget.column),
+        onTap: _touchHandler,
+        child: Container(
+          alignment: Alignment.center,
+          height: 50,
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          decoration: BoxDecoration(
+            border: SudokuUtils.getBorder(widget.row, widget.column),
+            borderRadius:
+                SudokuUtils.getBorderRadius(widget.row, widget.column),
+          ),
+          child: Text(
+            widget.itemValue == '0' ? '' : widget.itemValue,
+            textAlign: TextAlign.center,
+            style: const TextStyle()
+                .copyWith(fontSize: 26, fontWeight: FontWeight.w400),
+          ),
         ),
       ),
     );
