@@ -14,6 +14,7 @@ const neighboringColor = Color(0xFFD4E2FF);
 const selectedColor = Color(0xFFABC5FE);
 const oddCellGroupColor = Color.fromARGB(255, 225, 225, 225);
 const selectedTextColor = Color(0xFF0d31f9);
+const wrongTextColor = Colors.red;
 
 const strongBorder = BorderSide(
   color: Colors.black,
@@ -107,7 +108,16 @@ class SudokuUtils {
     return null;
   }
 
-  static Color? getCellTextColor(int row, int column, SudokuCell selected) {
+  static Color? getCellTextColor(
+    int row,
+    int column,
+    SudokuCell selected,
+    bool isCorrect,
+  ) {
+    if (!isCorrect) {
+      return wrongTextColor;
+    }
+
     if (selected.row == row && selected.column == column) {
       return selectedTextColor;
     }

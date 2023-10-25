@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sudoku/data/sudoku_data.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/utils/sudoku_utils.dart';
 import 'package:sudoku/widgets/sudoku_table_item.dart';

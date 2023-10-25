@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/providers/selected_item_provider.dart';
+import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/utils/sudoku_utils.dart';
 
 class SudokuTableItem extends ConsumerStatefulWidget {
@@ -31,6 +32,10 @@ class _SudokuTableItemState extends ConsumerState<SudokuTableItem> {
   @override
   Widget build(BuildContext context) {
     final selectedCell = ref.watch(selectedItemProvider);
+    final tableState = ref.watch(sudokuTableProvider);
+
+    final isCorrect = tableState.initialState![widget.row][widget.column] ==
+        tableState.solutionState![widget.row][widget.column];
 
     return Expanded(
       child: Container(
@@ -62,6 +67,7 @@ class _SudokuTableItemState extends ConsumerState<SudokuTableItem> {
                     widget.row,
                     widget.column,
                     selectedCell,
+                    isCorrect,
                   ),
                 ),
               ),

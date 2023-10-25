@@ -19,8 +19,8 @@ class _SudokuScreenState extends ConsumerState<SudokuScreen> {
   @override
   void initState() {
     super.initState();
-    final init = sudokuWithoutAnswer;
-    final solution = sudokuWithoutAnswer;
+    final init = sudokuWithoutSolution;
+    final solution = sudokuWithSolution;
     Future(() {
       ref.read(sudokuTableProvider.notifier).setSudoku(init, solution);
     });
