@@ -113,11 +113,19 @@ class SudokuUtils {
     int column,
     SudokuCell selected,
     bool isCorrect,
+    // bool shouldUserFill,
   ) {
     if (!isCorrect) {
       return wrongTextColor;
     }
 
+    // if (shouldUserFill) {
+    //   return selectedTextColor;
+    // }
+
+    // if (shouldUserFill || (selected.row == row && selected.column == column)) {
+    //   return selectedTextColor;
+    // }
     if (selected.row == row && selected.column == column) {
       return selectedTextColor;
     }

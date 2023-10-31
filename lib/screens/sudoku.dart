@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/data/sudoku_data.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
+import 'package:sudoku/widgets/sudoku_actions.dart';
 import 'package:sudoku/widgets/sudoku_numpad.dart';
 import 'package:sudoku/widgets/sudoku_table.dart';
 import 'package:sudoku/widgets/sudoku_timer.dart';
@@ -56,6 +57,10 @@ class _SudokuScreenState extends ConsumerState<SudokuScreen> {
                       child: const SudokuTimer(),
                     ),
                     const SudokuTable(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const SudokuActions(),
                     const SizedBox(
                       height: 20,
                     ),
