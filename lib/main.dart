@@ -5,13 +5,13 @@ import 'package:sudoku/screens/sudoku.dart';
 void main() {
   runApp(
     const ProviderScope(
-      child: App(),
+      child: MyApp(),
     ),
   );
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
