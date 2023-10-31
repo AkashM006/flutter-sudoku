@@ -14,13 +14,10 @@ class History {
 }
 
 class Sudoku {
-  Sudoku({
-    init,
-    solution,
-    history,
-  })  : initialState = init,
+  Sudoku({init, solution, history, origin})
+      : initialState = init,
         solutionState = solution,
-        originalUnFilledState = init,
+        originalUnFilledState = origin,
         historyList = history ?? [];
 
   List<List<int>>? initialState;
@@ -32,31 +29,29 @@ class Sudoku {
 class SudokuTableNotifier extends StateNotifier<Sudoku> {
   SudokuTableNotifier() : super(Sudoku());
 
-  void setSudoku(List<List<int>> init, List<List<int>> solution) {
+  void setSudoku(
+    List<List<int>> init,
+    List<List<int>> solution,
+  ) {
     List<History> history = [];
-    for (var i = 0; i < init.length; i++) {
-      List<bool> temp = [];
-      for (var j = 0; j < init[i].length; j++) {
-        if (init[i][j] == 0) {
-          temp.add(true);
-        } else {
-          temp.add(false);
-        }
-      }
-    }
 
     state = Sudoku(
       init: init,
       solution: solution,
+      origin: init.map((row) => [...row]).toList(),
       history: history,
     );
   }
 
   void setSudokuItem(int row, int column, int data) {
     if (state.initialState![row][column] != state.solutionState![row][column]) {
-      // if the correct answer has not been filled with the correct answer only then fill
+      // if the correct answer has not been filled only then fill
       var updatedHistory = [...state.historyList];
-      var updatedList = List<List<int>>.from(state.initialState!);
+      var updatedList = state.initialState!
+          .map(
+            (row) => [...row],
+          )
+          .toList();
 
       updatedHistory.add(
         History(
@@ -72,13 +67,14 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
         init: updatedList,
         solution: state.solutionState,
         history: updatedHistory,
+        origin: state.originalUnFilledState,
       );
     }
   }
 
   void undo() {
     var updatedHistory = [...state.historyList];
-    var updatedList = List<List<int>>.from(state.initialState!);
+    var updatedList = state.initialState!.map((row) => [...row]).toList();
 
     if (updatedHistory.isEmpty) return;
 
@@ -91,6 +87,7 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
       init: updatedList,
       solution: state.solutionState,
       history: updatedHistory,
+      origin: state.originalUnFilledState,
     );
   }
 }

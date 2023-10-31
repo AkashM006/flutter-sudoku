@@ -31,17 +31,26 @@ class _SudokuTableItemState extends ConsumerState<SudokuTableItem> {
 
   @override
   Widget build(BuildContext context) {
+    final original = ref.watch(sudokuTableProvider).originalUnFilledState;
+
     final selectedCell = ref.watch(selectedItemProvider);
     final tableState = ref.watch(sudokuTableProvider);
 
-    final isCorrect = tableState.initialState![widget.row][widget.column] ==
+    final initTable = tableState.initialState!;
+
+    final isCorrect = initTable[widget.row][widget.column] ==
         tableState.solutionState![widget.row][widget.column];
+    final shouldUserFill =
+        tableState.originalUnFilledState![widget.row][widget.column] == 0;
+    final isSameNumber = initTable[widget.row][widget.column] != 0 &&
+        initTable[widget.row][widget.column] ==
+            initTable[selectedCell.row][selectedCell.column];
 
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
           color: SudokuUtils.getCellBackground(
-              widget.row, widget.column, selectedCell),
+              widget.row, widget.column, selectedCell, isSameNumber),
           borderRadius: SudokuUtils.getBorderRadius(widget.row, widget.column),
         ),
         child: Material(
@@ -68,6 +77,7 @@ class _SudokuTableItemState extends ConsumerState<SudokuTableItem> {
                     widget.column,
                     selectedCell,
                     isCorrect,
+                    shouldUserFill,
                   ),
                 ),
               ),

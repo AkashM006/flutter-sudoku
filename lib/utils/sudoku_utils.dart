@@ -85,12 +85,13 @@ class SudokuUtils {
     );
   }
 
-  static Color? getCellBackground(int row, int column, SudokuCell selected) {
+  static Color? getCellBackground(
+      int row, int column, SudokuCell selected, bool isSameNumber) {
     final int selectedCellGroupNumber =
         _getCellGroupNumber(selected.row, selected.column);
     final int currentCellGroupNumber = _getCellGroupNumber(row, column);
 
-    if (selected.column == column && selected.row == row) {
+    if ((selected.column == column && selected.row == row) || isSameNumber) {
       return selectedColor;
     }
 
@@ -113,22 +114,16 @@ class SudokuUtils {
     int column,
     SudokuCell selected,
     bool isCorrect,
-    // bool shouldUserFill,
+    bool shouldUserFill,
   ) {
     if (!isCorrect) {
       return wrongTextColor;
     }
 
-    // if (shouldUserFill) {
-    //   return selectedTextColor;
-    // }
-
-    // if (shouldUserFill || (selected.row == row && selected.column == column)) {
-    //   return selectedTextColor;
-    // }
-    if (selected.row == row && selected.column == column) {
+    if (shouldUserFill || (selected.row == row && selected.column == column)) {
       return selectedTextColor;
     }
+
     return null;
   }
 }
