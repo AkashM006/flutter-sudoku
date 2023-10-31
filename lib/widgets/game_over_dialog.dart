@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// todo: once game over show time, and also pause the timer.
+
 class GameOverDialog extends StatelessWidget {
   const GameOverDialog({super.key});
 
