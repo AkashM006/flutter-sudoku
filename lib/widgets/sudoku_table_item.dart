@@ -31,8 +31,6 @@ class _SudokuTableItemState extends ConsumerState<SudokuTableItem> {
 
   @override
   Widget build(BuildContext context) {
-    final original = ref.watch(sudokuTableProvider).originalUnFilledState;
-
     final selectedCell = ref.watch(selectedItemProvider);
     final tableState = ref.watch(sudokuTableProvider);
 

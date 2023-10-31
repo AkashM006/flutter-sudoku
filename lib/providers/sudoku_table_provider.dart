@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/providers/selected_item_provider.dart';
+import 'package:sudoku/providers/sudoku_game_provider.dart';
 
 class History {
   const History({
@@ -27,7 +28,9 @@ class Sudoku {
 }
 
 class SudokuTableNotifier extends StateNotifier<Sudoku> {
-  SudokuTableNotifier() : super(Sudoku());
+  SudokuTableNotifier(this.errorCountIncrementer) : super(Sudoku());
+
+  final Function() errorCountIncrementer;
 
   void setSudoku(
     List<List<int>> init,
@@ -53,15 +56,20 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
           )
           .toList();
 
+      if (updatedList[row][column] != data &&
+          updatedList[row][column] != state.solutionState![row][column]) {
+        // if user enters something wrong then increment the error count
+        errorCountIncrementer();
+      }
+
       updatedHistory.add(
         History(
           cell: SudokuCell(row: row, column: column),
           oldValue: updatedList[row][column],
-          newValue: data,
+          newValue: updatedList[row][column] == data ? 0 : data,
         ),
       );
-
-      updatedList[row][column] = data;
+      updatedList[row][column] = updatedList[row][column] == data ? 0 : data;
 
       state = Sudoku(
         init: updatedList,
@@ -93,5 +101,10 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
 }
 
 final sudokuTableProvider = StateNotifierProvider<SudokuTableNotifier, Sudoku>(
-  (ref) => SudokuTableNotifier(),
+  (ref) {
+    final errorCountIncrementer =
+        ref.read(sudokuGameProvider.notifier).incrementErrorCount;
+
+    return SudokuTableNotifier(errorCountIncrementer);
+  },
 );

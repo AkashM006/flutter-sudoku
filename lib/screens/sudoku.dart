@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/data/sudoku_data.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/widgets/sudoku_actions.dart';
+import 'package:sudoku/widgets/sudoku_error_counter.dart';
 import 'package:sudoku/widgets/sudoku_numpad.dart';
 import 'package:sudoku/widgets/sudoku_table.dart';
 import 'package:sudoku/widgets/sudoku_timer.dart';
@@ -43,31 +44,37 @@ class _SudokuScreenState extends ConsumerState<SudokuScreen> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : SingleChildScrollView(
+          : const SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   left: 20,
                   right: 20,
                   bottom: 20,
                 ),
                 child: Column(
                   children: [
-                    const SizedBox(
+                    SizedBox(
                       height: 15,
                     ),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: const SudokuTimer(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SudokuTimer(),
+                          SudokuErrorCounter(),
+                        ],
+                      ),
                     ),
-                    const SudokuTable(),
-                    const SizedBox(
+                    SudokuTable(),
+                    SizedBox(
                       height: 20,
                     ),
-                    const SudokuActions(),
-                    const SizedBox(
+                    SudokuActions(),
+                    SizedBox(
                       height: 20,
                     ),
-                    const SudokuNumPad(),
+                    SudokuNumPad(),
                   ],
                 ),
               ),
