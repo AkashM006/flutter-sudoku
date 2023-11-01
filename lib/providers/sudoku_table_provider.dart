@@ -15,8 +15,12 @@ class History {
 }
 
 class Sudoku {
-  Sudoku({init, solution, history, origin})
-      : initialState = init,
+  Sudoku({
+    init,
+    solution,
+    history,
+    origin,
+  })  : initialState = init,
         solutionState = solution,
         originalUnFilledState = origin,
         historyList = history ?? [];
@@ -25,6 +29,15 @@ class Sudoku {
   List<List<int>>? originalUnFilledState;
   List<List<int>>? solutionState;
   List<History> historyList = [];
+
+  Sudoku copyWith({init, solution, history, origin}) {
+    return Sudoku(
+      init: init ?? initialState,
+      solution: solution ?? solutionState,
+      history: history ?? historyList,
+      origin: origin ?? originalUnFilledState,
+    );
+  }
 }
 
 class SudokuTableNotifier extends StateNotifier<Sudoku> {
@@ -57,7 +70,7 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
           .toList();
 
       if (updatedList[row][column] != data &&
-          updatedList[row][column] != state.solutionState![row][column]) {
+          data != state.solutionState![row][column]) {
         // if user enters something wrong then increment the error count
         errorCountIncrementer();
       }
@@ -71,12 +84,7 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
       );
       updatedList[row][column] = updatedList[row][column] == data ? 0 : data;
 
-      state = Sudoku(
-        init: updatedList,
-        solution: state.solutionState,
-        history: updatedHistory,
-        origin: state.originalUnFilledState,
-      );
+      state = state.copyWith(init: updatedList, history: updatedHistory);
     }
   }
 
@@ -91,11 +99,15 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
     updatedList[lastAction.cell.row][lastAction.cell.column] =
         lastAction.oldValue;
 
+    state = state.copyWith(init: updatedList, history: updatedHistory);
+  }
+
+  void reset() {
     state = Sudoku(
-      init: updatedList,
-      solution: state.solutionState,
-      history: updatedHistory,
+      history: <History>[],
+      init: state.originalUnFilledState,
       origin: state.originalUnFilledState,
+      solution: state.solutionState,
     );
   }
 }

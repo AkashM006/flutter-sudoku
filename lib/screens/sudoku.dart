@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/data/sudoku_data.dart';
+import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/widgets/sudoku_actions.dart';
 import 'package:sudoku/widgets/sudoku_error_counter.dart';
 import 'package:sudoku/widgets/sudoku_numpad.dart';
 import 'package:sudoku/widgets/sudoku_table.dart';
-import 'package:sudoku/widgets/sudoku_timer.dart';
 
 class SudokuScreen extends ConsumerStatefulWidget {
   const SudokuScreen({super.key});
@@ -21,19 +21,21 @@ class _SudokuScreenState extends ConsumerState<SudokuScreen> {
   @override
   void initState() {
     super.initState();
-    final init = List<List<int>>.from(sudokuWithoutSolution);
-    final solution = List<List<int>>.from(sudokuWithSolution);
+    final init = sudokuWithoutSolution.map((row) => [...row]).toList();
+    final solution = sudokuWithSolution.map((row) => [...row]).toList();
     Future(() {
       ref.read(sudokuTableProvider.notifier).setSudoku(
             init,
             solution,
           );
+      ref.read(sudokuGameProvider.notifier).start(); // start the timer
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final table = ref.watch(sudokuTableProvider).initialState;
+    final sudokuTime = ref.watch(sudokuTimeProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -44,37 +46,37 @@ class _SudokuScreenState extends ConsumerState<SudokuScreen> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : const SingleChildScrollView(
+          : SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 20,
                   right: 20,
                   bottom: 20,
                 ),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SudokuTimer(),
-                          SudokuErrorCounter(),
+                          Text(sudokuTime),
+                          const SudokuErrorCounter(),
                         ],
                       ),
                     ),
-                    SudokuTable(),
-                    SizedBox(
+                    const SudokuTable(),
+                    const SizedBox(
                       height: 20,
                     ),
-                    SudokuActions(),
-                    SizedBox(
+                    const SudokuActions(),
+                    const SizedBox(
                       height: 20,
                     ),
-                    SudokuNumPad(),
+                    const SudokuNumPad(),
                   ],
                 ),
               ),
