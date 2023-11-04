@@ -3,24 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const oneSecond = Duration(seconds: 1);
 
+enum Difficulty {
+  easy,
+  medium,
+  hard,
+}
+
 class SudokuGame {
-  const SudokuGame({
-    required this.errorCount,
-    required this.permissibleErrorCount,
-    required this.duration,
-  });
+  const SudokuGame(
+      {required this.errorCount,
+      required this.permissibleErrorCount,
+      required this.duration,
+      required this.difficulty});
 
   final int errorCount;
   final int permissibleErrorCount;
+  final Difficulty difficulty;
 
   final Duration duration;
 
-  SudokuGame copyWith({errorCount, permissibleErrorCount, duration}) {
+  SudokuGame copyWith(
+      {errorCount, permissibleErrorCount, duration, difficulty}) {
     return SudokuGame(
       errorCount: errorCount ?? this.errorCount,
       permissibleErrorCount:
           permissibleErrorCount ?? this.permissibleErrorCount,
       duration: duration ?? this.duration,
+      difficulty: difficulty ?? this.difficulty,
     );
   }
 }
@@ -32,10 +41,21 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
             errorCount: 0,
             permissibleErrorCount: 3,
             duration: Duration.zero,
+            difficulty: Difficulty.easy,
           ),
         );
 
   Timer? timer;
+
+  void init(int errorCount, int permissibleErrorCount, Duration duration,
+      Difficulty difficulty) {
+    state = SudokuGame(
+      errorCount: errorCount,
+      permissibleErrorCount: permissibleErrorCount,
+      duration: duration,
+      difficulty: difficulty,
+    );
+  }
 
   void start() {
     timer = Timer.periodic(oneSecond, (timer) {
@@ -51,10 +71,10 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
 
   void reset() {
     timer?.cancel();
-    state = const SudokuGame(
+    state = state.copyWith(
       errorCount: 0,
       permissibleErrorCount: 3,
-      duration: Duration(seconds: 0),
+      duration: Duration.zero,
     );
     timer = Timer.periodic(oneSecond, (timer) {
       state = state.copyWith(duration: state.duration + oneSecond);

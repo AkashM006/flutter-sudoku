@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku/utils/sudoku_utils.dart';
+import 'package:sudoku/widgets/home/button_list.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  void _newGameHandler() {}
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +24,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            ElevatedButton(
-              onPressed: _newGameHandler,
-              child: const Text('New Game'),
-            ),
+            const ButtonList(),
           ],
         ),
       ),

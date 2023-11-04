@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku/providers/selected_item_provider.dart';
+import 'package:sudoku/providers/sudoku_game_provider.dart';
 
 const radius = Radius.circular(15);
 
@@ -25,6 +26,13 @@ const lightBorder = BorderSide(
   width: 1,
 );
 const invisibleBorder = BorderSide.none;
+
+class Level {
+  const Level({required this.title, required this.difficulty});
+
+  final String title;
+  final Difficulty difficulty;
+}
 
 class SudokuUtils {
   static bool _isCornerItem(int row, int column) {

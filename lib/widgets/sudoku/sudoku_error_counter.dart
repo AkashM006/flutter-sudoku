@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
-import 'package:sudoku/widgets/game_over_dialog.dart';
+import 'package:sudoku/widgets/sudoku/game_over_dialog.dart';
 
 class SudokuErrorCounter extends ConsumerStatefulWidget {
   const SudokuErrorCounter({super.key});

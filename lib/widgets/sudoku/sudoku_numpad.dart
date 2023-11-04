@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sudoku/widgets/sudoku_numpad_item.dart';
+import 'package:sudoku/widgets/sudoku/sudoku_numpad_item.dart';
 
 class SudokuNumPad extends StatelessWidget {
   const SudokuNumPad({super.key});

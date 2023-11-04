@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:sudoku/providers/selected_item_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
-import 'package:sudoku/widgets/animated_rive_button.dart';
+import 'package:sudoku/widgets/sudoku/animated_rive_button.dart';
 
 class SudokuActions extends ConsumerStatefulWidget {
   const SudokuActions({super.key});

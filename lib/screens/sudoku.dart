@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/data/sudoku_data.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
-import 'package:sudoku/widgets/sudoku_actions.dart';
-import 'package:sudoku/widgets/sudoku_error_counter.dart';
-import 'package:sudoku/widgets/sudoku_numpad.dart';
-import 'package:sudoku/widgets/sudoku_table.dart';
+import 'package:sudoku/widgets/sudoku/sudoku_actions.dart';
+import 'package:sudoku/widgets/sudoku/sudoku_error_counter.dart';
+import 'package:sudoku/widgets/sudoku/sudoku_numpad.dart';
+import 'package:sudoku/widgets/sudoku/sudoku_table.dart';
 
 class SudokuScreen extends ConsumerStatefulWidget {
   const SudokuScreen({super.key});
