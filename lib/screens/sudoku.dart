@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sudoku/data/sudoku_data.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/widgets/sudoku/sudoku_actions.dart';
@@ -21,13 +20,7 @@ class _SudokuScreenState extends ConsumerState<SudokuScreen> {
   @override
   void initState() {
     super.initState();
-    final init = sudokuWithoutSolution.map((row) => [...row]).toList();
-    final solution = sudokuWithSolution.map((row) => [...row]).toList();
     Future(() {
-      ref.read(sudokuTableProvider.notifier).setSudoku(
-            init,
-            solution,
-          );
       ref.read(sudokuGameProvider.notifier).start(); // start the timer
     });
   }
@@ -36,10 +29,11 @@ class _SudokuScreenState extends ConsumerState<SudokuScreen> {
   Widget build(BuildContext context) {
     final table = ref.watch(sudokuTableProvider).initialState;
     final sudokuTime = ref.watch(sudokuTimeProvider);
+    final sudokuLevel = ref.watch(sudokuGameProvider).difficulty;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sudoku - Hard'),
+        title: Text('Sudoku - $sudokuLevel'),
         centerTitle: true,
       ),
       body: table == null

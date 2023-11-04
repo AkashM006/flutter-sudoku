@@ -27,13 +27,6 @@ const lightBorder = BorderSide(
 );
 const invisibleBorder = BorderSide.none;
 
-class Level {
-  const Level({required this.title, required this.difficulty});
-
-  final String title;
-  final Difficulty difficulty;
-}
-
 class SudokuUtils {
   static bool _isCornerItem(int row, int column) {
     return (row == 0 || row == 8) && (column == 0 || column == 8);

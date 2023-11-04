@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sudoku/models/sudoku_level.dart';
 import 'package:sudoku/providers/selected_item_provider.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
+import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
 class History {
   const History({
@@ -41,9 +45,39 @@ class Sudoku {
 }
 
 class SudokuTableNotifier extends StateNotifier<Sudoku> {
-  SudokuTableNotifier(this.errorCountIncrementer) : super(Sudoku());
+  SudokuTableNotifier(this.errorCountIncrementer, this.initGame)
+      : super(Sudoku());
 
   final Function() errorCountIncrementer;
+  final Function(
+    int errorCount,
+    int permissibleErrorCount,
+    Duration duration,
+    Difficulty difficulty,
+  ) initGame;
+
+  void startSudoku(
+    int permissibleErrorCount,
+    Difficulty difficulty,
+  ) {
+    final missingNumbersRange = sudokuLevelMapping[difficulty]!;
+    final missingNumbers = missingNumbersRange.min +
+        Random().nextInt(missingNumbersRange.max - missingNumbersRange.min + 1);
+
+    var sudokuGenerator = SudokuGenerator(emptySquares: missingNumbers);
+
+    List<List<int>> question = sudokuGenerator.newSudoku;
+    List<List<int>> answer = sudokuGenerator.newSudokuSolved;
+
+    state = Sudoku(
+      init: question.map((e) => [...e]).toList(),
+      solution: answer.map((e) => [...e]).toList(),
+      history: <History>[],
+      origin: question.map((e) => [...e]).toList(),
+    );
+
+    initGame(0, 3, Duration.zero, difficulty);
+  }
 
   void setSudoku(
     List<List<int>> init,
@@ -61,7 +95,6 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
 
   void setSudokuItem(int row, int column, int data) {
     if (state.initialState![row][column] != state.solutionState![row][column]) {
-      // if the correct answer has not been filled only then fill
       var updatedHistory = [...state.historyList];
       var updatedList = state.initialState!
           .map(
@@ -71,7 +104,6 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
 
       if (updatedList[row][column] != data &&
           data != state.solutionState![row][column]) {
-        // if user enters something wrong then increment the error count
         errorCountIncrementer();
       }
 
@@ -114,9 +146,10 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
 
 final sudokuTableProvider = StateNotifierProvider<SudokuTableNotifier, Sudoku>(
   (ref) {
-    final errorCountIncrementer =
-        ref.read(sudokuGameProvider.notifier).incrementErrorCount;
+    final sudokuGame = ref.read(sudokuGameProvider.notifier);
+    final errorCountIncrementer = sudokuGame.incrementErrorCount;
+    final initGame = sudokuGame.init;
 
-    return SudokuTableNotifier(errorCountIncrementer);
+    return SudokuTableNotifier(errorCountIncrementer, initGame);
   },
 );

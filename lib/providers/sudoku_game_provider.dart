@@ -10,11 +10,12 @@ enum Difficulty {
 }
 
 class SudokuGame {
-  const SudokuGame(
-      {required this.errorCount,
-      required this.permissibleErrorCount,
-      required this.duration,
-      required this.difficulty});
+  const SudokuGame({
+    required this.errorCount,
+    required this.permissibleErrorCount,
+    required this.duration,
+    required this.difficulty,
+  });
 
   final int errorCount;
   final int permissibleErrorCount;
@@ -22,8 +23,12 @@ class SudokuGame {
 
   final Duration duration;
 
-  SudokuGame copyWith(
-      {errorCount, permissibleErrorCount, duration, difficulty}) {
+  SudokuGame copyWith({
+    errorCount,
+    permissibleErrorCount,
+    duration,
+    difficulty,
+  }) {
     return SudokuGame(
       errorCount: errorCount ?? this.errorCount,
       permissibleErrorCount:
@@ -47,8 +52,12 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
 
   Timer? timer;
 
-  void init(int errorCount, int permissibleErrorCount, Duration duration,
-      Difficulty difficulty) {
+  void init(
+    int errorCount,
+    int permissibleErrorCount,
+    Duration duration,
+    Difficulty difficulty,
+  ) {
     state = SudokuGame(
       errorCount: errorCount,
       permissibleErrorCount: permissibleErrorCount,
@@ -58,6 +67,7 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
   }
 
   void start() {
+    // start the timer
     timer = Timer.periodic(oneSecond, (timer) {
       state = state.copyWith(
         duration: state.duration + oneSecond,
@@ -66,6 +76,7 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
   }
 
   void stop() {
+    print("Stop Timer");
     timer?.cancel();
   }
 
@@ -88,7 +99,9 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
 
 final sudokuGameProvider =
     StateNotifierProvider<SudokuGameNotifier, SudokuGame>(
-  (ref) => SudokuGameNotifier(),
+  (ref) {
+    return SudokuGameNotifier();
+  },
 );
 
 final sudokuTimeProvider = Provider<String>((ref) {

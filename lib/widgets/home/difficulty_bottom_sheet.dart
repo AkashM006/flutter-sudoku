@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sudoku/models/sudoku_level.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
-import 'package:sudoku/utils/sudoku_utils.dart';
+import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/widgets/home/difficulty_item.dart';
-
-const levels = [
-  Level(title: 'Easy', difficulty: Difficulty.easy),
-  Level(
-    title: 'Medium',
-    difficulty: Difficulty.medium,
-  ),
-  Level(
-    title: 'Hard',
-    difficulty: Difficulty.hard,
-  )
-];
 
 class DifficultyBottomSheet extends ConsumerWidget {
   const DifficultyBottomSheet({super.key});
 
-  void _startGame(Difficulty difficulty) {
-    // start the game
+  void _startGame(Difficulty difficulty, WidgetRef ref, context) {
+    ref.read(sudokuTableProvider.notifier).startSudoku(
+          3,
+          difficulty,
+        );
+    Navigator.of(context).pop();
   }
 
   @override
@@ -39,11 +32,12 @@ class DifficultyBottomSheet extends ConsumerWidget {
           const SizedBox(
             height: 30,
           ),
-          ...levels
+          ...sudokuLevelMapping.entries
               .map(
                 (level) => DifficultyItem(
-                  difficulty: level.title,
-                  clickHandler: () => _startGame(level.difficulty),
+                  difficulty: level.value.title,
+                  clickHandler: () =>
+                      _startGame(level.value.difficulty, ref, context),
                 ),
               )
               .toList(),
