@@ -9,10 +9,15 @@ class GameOverDialog extends ConsumerWidget {
   void _restartGame(BuildContext context, WidgetRef ref) {
     ref.read(sudokuTableProvider.notifier).reset();
     ref.read(sudokuGameProvider.notifier).reset();
-    Navigator.of(context).pop();
+    Navigator.of(context).pop('restart_game');
   }
 
-  void _newGame() {}
+  void _newGame(BuildContext context, WidgetRef ref) {
+    final currentDifficulty =
+        ref.read(sudokuGameProvider).difficulty.difficulty;
+    ref.read(sudokuTableProvider.notifier).startSudoku(3, currentDifficulty);
+    Navigator.of(context).pop('new_game');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +43,9 @@ class GameOverDialog extends ConsumerWidget {
         TextButton(
             onPressed: () => _restartGame(context, ref),
             child: const Text("Restart")),
-        TextButton(onPressed: _newGame, child: const Text("New Game")),
+        TextButton(
+            onPressed: () => _newGame(context, ref),
+            child: const Text("New Game")),
       ],
     );
   }
