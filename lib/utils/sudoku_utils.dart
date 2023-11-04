@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku/providers/selected_item_provider.dart';
-import 'package:sudoku/providers/sudoku_game_provider.dart';
 
 const radius = Radius.circular(15);
 

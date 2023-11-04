@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sudoku/models/sudoku_level.dart';
 
 const oneSecond = Duration(seconds: 1);
 
@@ -19,7 +20,7 @@ class SudokuGame {
 
   final int errorCount;
   final int permissibleErrorCount;
-  final Difficulty difficulty;
+  final SudokuLevel difficulty;
 
   final Duration duration;
 
@@ -42,11 +43,11 @@ class SudokuGame {
 class SudokuGameNotifier extends StateNotifier<SudokuGame> {
   SudokuGameNotifier()
       : super(
-          const SudokuGame(
+          SudokuGame(
             errorCount: 0,
             permissibleErrorCount: 3,
             duration: Duration.zero,
-            difficulty: Difficulty.easy,
+            difficulty: sudokuLevelMapping[Difficulty.easy]!,
           ),
         );
 
@@ -56,7 +57,7 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
     int errorCount,
     int permissibleErrorCount,
     Duration duration,
-    Difficulty difficulty,
+    SudokuLevel difficulty,
   ) {
     state = SudokuGame(
       errorCount: errorCount,
@@ -67,7 +68,6 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
   }
 
   void start() {
-    // start the timer
     timer = Timer.periodic(oneSecond, (timer) {
       state = state.copyWith(
         duration: state.duration + oneSecond,
@@ -76,7 +76,6 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
   }
 
   void stop() {
-    print("Stop Timer");
     timer?.cancel();
   }
 

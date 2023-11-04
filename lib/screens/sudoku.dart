@@ -29,7 +29,7 @@ class _SudokuScreenState extends ConsumerState<SudokuScreen> {
   Widget build(BuildContext context) {
     final table = ref.watch(sudokuTableProvider).initialState;
     final sudokuTime = ref.watch(sudokuTimeProvider);
-    final sudokuLevel = ref.watch(sudokuGameProvider).difficulty;
+    final sudokuLevel = ref.watch(sudokuGameProvider).difficulty.title;
 
     return Scaffold(
       appBar: AppBar(

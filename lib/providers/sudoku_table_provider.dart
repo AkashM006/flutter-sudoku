@@ -53,16 +53,16 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
     int errorCount,
     int permissibleErrorCount,
     Duration duration,
-    Difficulty difficulty,
+    SudokuLevel difficulty,
   ) initGame;
 
   void startSudoku(
     int permissibleErrorCount,
     Difficulty difficulty,
   ) {
-    final missingNumbersRange = sudokuLevelMapping[difficulty]!;
-    final missingNumbers = missingNumbersRange.min +
-        Random().nextInt(missingNumbersRange.max - missingNumbersRange.min + 1);
+    final sudokuLevel = sudokuLevelMapping[difficulty]!;
+    final missingNumbers = sudokuLevel.min +
+        Random().nextInt(sudokuLevel.max - sudokuLevel.min + 1);
 
     var sudokuGenerator = SudokuGenerator(emptySquares: missingNumbers);
 
@@ -76,7 +76,7 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
       origin: question.map((e) => [...e]).toList(),
     );
 
-    initGame(0, 3, Duration.zero, difficulty);
+    initGame(0, 3, Duration.zero, sudokuLevel);
   }
 
   void setSudoku(

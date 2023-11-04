@@ -20,6 +20,7 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
       if (state.errorCount >= state.permissibleErrorCount) {
         ref.read(sudokuGameProvider.notifier).stop();
         await showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) => const GameOverDialog(),
         );
