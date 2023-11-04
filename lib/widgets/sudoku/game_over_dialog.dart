@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
+import 'package:sudoku/widgets/common/difficulty_bottom_sheet.dart';
 
 class GameOverDialog extends ConsumerWidget {
   const GameOverDialog({super.key});
@@ -9,14 +10,15 @@ class GameOverDialog extends ConsumerWidget {
   void _restartGame(BuildContext context, WidgetRef ref) {
     ref.read(sudokuTableProvider.notifier).reset();
     ref.read(sudokuGameProvider.notifier).reset();
-    Navigator.of(context).pop('restart_game');
+    Navigator.of(context).pop();
   }
 
-  void _newGame(BuildContext context, WidgetRef ref) {
-    final currentDifficulty =
-        ref.read(sudokuGameProvider).difficulty.difficulty;
-    ref.read(sudokuTableProvider.notifier).startSudoku(3, currentDifficulty);
-    Navigator.of(context).pop('new_game');
+  void _newGame(BuildContext context, WidgetRef ref) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (context) => const DifficultyBottomSheet(),
+    );
+    if (context.mounted) Navigator.of(context).pop();
   }
 
   @override

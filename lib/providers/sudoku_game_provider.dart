@@ -65,6 +65,7 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
       duration: duration,
       difficulty: difficulty,
     );
+    start();
   }
 
   void start() {

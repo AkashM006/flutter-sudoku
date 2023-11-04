@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/models/sudoku_level.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
-import 'package:sudoku/widgets/home/difficulty_item.dart';
+import 'package:sudoku/widgets/common/difficulty_item.dart';
 
 class DifficultyBottomSheet extends ConsumerWidget {
   const DifficultyBottomSheet({super.key});

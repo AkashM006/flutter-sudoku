@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/screens/sudoku.dart';
 import 'package:sudoku/utils/sudoku_utils.dart';
-import 'package:sudoku/widgets/home/difficulty_bottom_sheet.dart';
+import 'package:sudoku/widgets/common/difficulty_bottom_sheet.dart';
 
 class ButtonList extends ConsumerWidget {
   const ButtonList({super.key});
