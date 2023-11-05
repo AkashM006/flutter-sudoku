@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
@@ -19,6 +20,7 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
   void initState() {
     super.initState();
     ref.read(sudokuGameProvider.notifier).addListener((state) async {
+      // listen if mistakes become 3
       if (state.errorCount >= state.permissibleErrorCount) {
         ref.read(sudokuGameProvider.notifier).stop();
         showDialog(
@@ -30,18 +32,26 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
     });
 
     ref.read(sudokuTableProvider.notifier).addListener((state) {
-      final currentTable = state.initialState!;
+      // listen if the sudoku has been filled
+      final currentTable = state.initialState!.expand((row) => row).toList();
+      final solutionTable = state.solutionState!.expand((row) => row).toList();
 
-      final hasNotFinished = currentTable.expand((row) => row).contains(0);
+      final hasNotFinished = currentTable.contains(0);
 
-      if (!hasNotFinished) {
-        ref.read(sudokuGameProvider.notifier).stop();
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => const GameFinishedDialog(),
-        );
+      if (hasNotFinished) {
+        return;
       }
+
+      final isFilledCorrectly = listEquals(currentTable, solutionTable);
+
+      if (!isFilledCorrectly) return;
+
+      ref.read(sudokuGameProvider.notifier).stop();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const GameFinishedDialog(),
+      );
     });
   }
 

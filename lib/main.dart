@@ -6,6 +6,7 @@ import 'package:sudoku/screens/home.dart';
 // 1. Handle the case where user finishes the sudoku correctly (Done)
 // 2. Persist state
 // 3. Continue button in the buttons list
+// 4. Disable button to the numbers if all of them filled correctly (Done)
 
 void main() {
   runApp(
@@ -24,7 +25,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      // home: const SudokuScreen(),
       home: const HomeScreen(),
     );
   }

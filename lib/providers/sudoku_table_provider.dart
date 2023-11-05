@@ -18,21 +18,54 @@ class History {
   final int newValue;
 }
 
+const numbers = [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+];
+
+List<List<int>> getNumbersMappedToIndices(List<List<int>>? table) {
+  if (table == null) return [[]];
+  print("Called");
+  List<int> expandedTable = table.expand((element) => element).toList();
+
+  final result = numbers.map(
+    (number) {
+      return expandedTable
+          .asMap()
+          .entries
+          .where((item) => item.value == number)
+          .map((e) => e.key)
+          .toList();
+    },
+  ).toList();
+
+  return result;
+}
+
 class Sudoku {
   Sudoku({
-    init,
-    solution,
-    history,
-    origin,
+    List<List<int>>? init,
+    List<List<int>>? solution,
+    List<History>? history,
+    List<List<int>>? origin,
   })  : initialState = init,
         solutionState = solution,
         originalUnFilledState = origin,
-        historyList = history ?? [];
+        historyList = history ?? [],
+        solutionNumbersMappedToIndices = getNumbersMappedToIndices(solution);
 
   List<List<int>>? initialState;
   List<List<int>>? originalUnFilledState;
   List<List<int>>? solutionState;
   List<History> historyList = [];
+  List<List<int>>? solutionNumbersMappedToIndices;
 
   Sudoku copyWith({init, solution, history, origin}) {
     return Sudoku(
