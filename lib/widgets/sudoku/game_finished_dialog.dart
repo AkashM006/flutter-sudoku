@@ -4,8 +4,8 @@ import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/widgets/common/difficulty_bottom_sheet.dart';
 
-class GameOverDialog extends ConsumerWidget {
-  const GameOverDialog({super.key});
+class GameFinishedDialog extends ConsumerWidget {
+  const GameFinishedDialog({super.key});
 
   void _restartGame(BuildContext context, WidgetRef ref) {
     ref.read(sudokuTableProvider.notifier).reset();
@@ -27,18 +27,12 @@ class GameOverDialog extends ConsumerWidget {
 
     return AlertDialog(
       title: const Text(
-        'Game over',
+        'Hooray! You did it!',
         textAlign: TextAlign.center,
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Time Taken: $time'),
-          const Text(
-            "Whoops! The game is over because you have made 3 mistakes.",
-            textAlign: TextAlign.center,
-          ),
-        ],
+      content: Text(
+        "You have finished the game with a time of $time",
+        textAlign: TextAlign.center,
       ),
       actionsAlignment: MainAxisAlignment.spaceEvenly,
       actions: [

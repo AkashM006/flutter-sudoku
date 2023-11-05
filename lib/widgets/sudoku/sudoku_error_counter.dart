@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
+import 'package:sudoku/providers/sudoku_table_provider.dart';
+import 'package:sudoku/widgets/sudoku/game_finished_dialog.dart';
 import 'package:sudoku/widgets/sudoku/game_over_dialog.dart';
 
 class SudokuErrorCounter extends ConsumerStatefulWidget {
@@ -23,6 +25,21 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
           barrierDismissible: false,
           context: context,
           builder: (context) => const GameOverDialog(),
+        );
+      }
+    });
+
+    ref.read(sudokuTableProvider.notifier).addListener((state) {
+      final currentTable = state.initialState!;
+
+      final hasNotFinished = currentTable.expand((row) => row).contains(0);
+
+      if (!hasNotFinished) {
+        ref.read(sudokuGameProvider.notifier).stop();
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const GameFinishedDialog(),
         );
       }
     });
