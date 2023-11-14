@@ -13,7 +13,9 @@ class DifficultyBottomSheet extends ConsumerWidget {
           3,
           difficulty,
         );
-    Navigator.of(context).pop();
+    Navigator.of(context).pop({
+      'start': true,
+    });
   }
 
   @override

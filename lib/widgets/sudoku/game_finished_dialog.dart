@@ -14,10 +14,11 @@ class GameFinishedDialog extends ConsumerWidget {
   }
 
   void _newGame(BuildContext context, WidgetRef ref) async {
-    await showModalBottomSheet(
+    var result = await showModalBottomSheet(
       context: context,
       builder: (context) => const DifficultyBottomSheet(),
     );
+    if (result == null) return;
     if (context.mounted) Navigator.of(context).pop();
   }
 

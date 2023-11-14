@@ -9,10 +9,11 @@ class ButtonList extends ConsumerWidget {
   const ButtonList({super.key});
 
   void _newGameHandler(context, WidgetRef ref) async {
-    await showModalBottomSheet(
+    var result = await showModalBottomSheet(
       context: context,
       builder: (context) => const DifficultyBottomSheet(),
     );
+    if (result == null) return;
     await Navigator.push(
       context,
       MaterialPageRoute(
