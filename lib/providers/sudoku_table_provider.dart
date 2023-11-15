@@ -32,7 +32,6 @@ const numbers = [
 
 List<List<int>> getNumbersMappedToIndices(List<List<int>>? table) {
   if (table == null) return [[]];
-  print("Called");
   List<int> expandedTable = table.expand((element) => element).toList();
 
   final result = numbers.map(
