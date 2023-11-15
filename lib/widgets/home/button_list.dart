@@ -23,14 +23,20 @@ class ButtonList extends ConsumerWidget {
     ref.read(sudokuGameProvider.notifier).stop();
   }
 
-  void _continueHandler(context, WidgetRef ref) async {}
+  void _continueHandler(context, WidgetRef ref) async {
+    ref.read(sudokuGameProvider.notifier).start();
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SudokuScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sudokuGameTime = ref.watch(sudokuGameProvider).duration;
     final didGameExist = sudokuGameTime.inMilliseconds != 0;
-
-    print('Game: $didGameExist');
 
     List<Widget> children = [];
 

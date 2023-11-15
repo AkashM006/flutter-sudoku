@@ -9,6 +9,7 @@ import 'package:sudoku/screens/home.dart';
 // 2. Persist state
 // 3. Continue button in the buttons list
 // 4. Disable button to the numbers if all of them filled correctly (Done)
+// 5. Instead of ElevatedButtons use TextButtons
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
