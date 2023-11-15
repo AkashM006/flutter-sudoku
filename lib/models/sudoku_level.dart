@@ -1,11 +1,12 @@
 import 'package:sudoku/providers/sudoku_game_provider.dart';
 
 class SudokuLevel {
-  const SudokuLevel(
-      {required this.title,
-      required this.difficulty,
-      required this.min,
-      required this.max});
+  const SudokuLevel({
+    required this.title,
+    required this.difficulty,
+    required this.min,
+    required this.max,
+  });
 
   final String title;
   final Difficulty difficulty;

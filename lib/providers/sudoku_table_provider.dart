@@ -85,7 +85,7 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
     int errorCount,
     int permissibleErrorCount,
     Duration duration,
-    SudokuLevel difficulty,
+    Difficulty difficulty,
   ) initGame;
 
   void startSudoku(
@@ -108,7 +108,7 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
       origin: question.map((e) => [...e]).toList(),
     );
 
-    initGame(0, 3, Duration.zero, sudokuLevel);
+    initGame(0, 3, Duration.zero, difficulty);
   }
 
   void setSudoku(

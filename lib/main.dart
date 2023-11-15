@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku/providers/shared_preference_provider.dart';
 import 'package:sudoku/screens/home.dart';
 
 // todo:
@@ -8,10 +10,15 @@ import 'package:sudoku/screens/home.dart';
 // 3. Continue button in the buttons list
 // 4. Disable button to the numbers if all of them filled correctly (Done)
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final sharedPreference = await SharedPreferences.getInstance();
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      overrides: [
+        sharedPreferenceProvider.overrideWith((ref) => sharedPreference),
+      ],
+      child: const MyApp(),
     ),
   );
 }

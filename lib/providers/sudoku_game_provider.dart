@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sudoku/models/sudoku_level.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku/providers/provider_keys.dart';
+import 'package:sudoku/providers/shared_preference_provider.dart';
 
 const oneSecond = Duration(seconds: 1);
 
@@ -20,7 +23,7 @@ class SudokuGame {
 
   final int errorCount;
   final int permissibleErrorCount;
-  final SudokuLevel difficulty;
+  final Difficulty difficulty;
 
   final Duration duration;
 
@@ -38,17 +41,48 @@ class SudokuGame {
       difficulty: difficulty ?? this.difficulty,
     );
   }
+
+  factory SudokuGame.fromJson(Map<String, dynamic> json) {
+    return SudokuGame(
+      errorCount: json['errorCount'] ?? 3,
+      permissibleErrorCount: json['permissibleErrorCount'] ?? 0,
+      duration: json['duration'] != null
+          ? Duration(milliseconds: json['duration'])
+          : Duration.zero,
+      difficulty: json['difficulty'] != null
+          ? Difficulty.values.elementAt(json['difficulty'])
+          : Difficulty.easy,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "errorCount": errorCount,
+      'permissibleErrorCount': permissibleErrorCount,
+      "duration": duration.inMilliseconds,
+      "difficulty": difficulty.index,
+    };
+  }
 }
 
 class SudokuGameNotifier extends StateNotifier<SudokuGame> {
-  SudokuGameNotifier()
+  final SharedPreferences sp;
+
+  SudokuGameNotifier(this.sp)
       : super(
-          SudokuGame(
-            errorCount: 0,
-            permissibleErrorCount: 3,
-            duration: Duration.zero,
-            difficulty: sudokuLevelMapping[Difficulty.easy]!,
-          ),
+          sp.getString(sudokuGameProviderKey) != null
+              ? SudokuGame.fromJson(
+                  jsonDecode(
+                    sp.getString(sudokuGameProviderKey)!,
+                  ),
+                )
+              : const SudokuGame(
+                  errorCount: 0,
+                  permissibleErrorCount: 3,
+                  duration: Duration.zero,
+                  // difficulty: sudokuLevelMapping[Difficulty.easy]!,
+                  difficulty: Difficulty.easy,
+                ),
         );
 
   Timer? timer;
@@ -57,7 +91,7 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
     int errorCount,
     int permissibleErrorCount,
     Duration duration,
-    SudokuLevel difficulty,
+    Difficulty difficulty,
   ) {
     state = SudokuGame(
       errorCount: errorCount,
@@ -93,14 +127,17 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
   }
 
   void incrementErrorCount() {
-    state = state.copyWith(errorCount: state.errorCount + 1);
+    final result = state.copyWith(errorCount: state.errorCount + 1);
+    sp.setString(sudokuGameProviderKey, jsonEncode(result));
+    state = result;
   }
 }
 
 final sudokuGameProvider =
     StateNotifierProvider<SudokuGameNotifier, SudokuGame>(
   (ref) {
-    return SudokuGameNotifier();
+    final sharedPreference = ref.watch(sharedPreferenceProvider);
+    return SudokuGameNotifier(sharedPreference);
   },
 );
 

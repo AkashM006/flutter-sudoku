@@ -37,6 +37,7 @@ dependencies:
   flutter_riverpod: ^2.4.4
   rive: ^0.12.1
   sudoku_solver_generator: ^2.1.0+1
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

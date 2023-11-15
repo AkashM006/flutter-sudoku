@@ -23,10 +23,37 @@ class ButtonList extends ConsumerWidget {
     ref.read(sudokuGameProvider.notifier).stop();
   }
 
+  void _continueHandler(context, WidgetRef ref) async {}
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
+    final sudokuGameTime = ref.watch(sudokuGameProvider).duration;
+    final didGameExist = sudokuGameTime.inMilliseconds != 0;
+
+    print('Game: $didGameExist');
+
+    List<Widget> children = [];
+
+    if (didGameExist) {
+      children.add(
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: neighboringColor,
+            foregroundColor: selectedTextColor,
+          ),
+          onPressed: () => _continueHandler(context, ref),
+          child: const Text("Continue"),
+        ),
+      );
+
+      children.add(
+        ElevatedButton(
+          onPressed: () => _newGameHandler(context, ref),
+          child: const Text('New Game'),
+        ),
+      );
+    } else {
+      children.add(
         ElevatedButton(
           onPressed: () => _newGameHandler(context, ref),
           style: ElevatedButton.styleFrom(
@@ -35,7 +62,11 @@ class ButtonList extends ConsumerWidget {
           ),
           child: const Text('New Game'),
         ),
-      ],
+      );
+    }
+
+    return Column(
+      children: children,
     );
   }
 }
