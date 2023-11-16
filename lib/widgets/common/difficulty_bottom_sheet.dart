@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sudoku/models/sudoku_game.dart';
 import 'package:sudoku/models/sudoku_level.dart';
-import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/widgets/common/difficulty_item.dart';
 

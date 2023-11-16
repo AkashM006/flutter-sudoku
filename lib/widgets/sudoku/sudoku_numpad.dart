@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
+import 'package:sudoku/utils/general_utils.dart';
 import 'package:sudoku/widgets/sudoku/sudoku_numpad_item.dart';
 
 class SudokuNumPad extends ConsumerWidget {

@@ -1,4 +1,4 @@
-import 'package:sudoku/providers/sudoku_game_provider.dart';
+import 'package:sudoku/models/sudoku_game.dart';
 
 class SudokuLevel {
   const SudokuLevel({

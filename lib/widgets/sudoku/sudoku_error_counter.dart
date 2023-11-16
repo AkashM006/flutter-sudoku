@@ -35,6 +35,7 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
     removeFilledStateCheckListener =
         ref.read(sudokuTableProvider.notifier).addListener((state) {
       // listen if the sudoku has been filled
+      if (state.initialState == null || state.solutionState == null) return;
       final currentTable = state.initialState!.expand((row) => row).toList();
       final solutionTable = state.solutionState!.expand((row) => row).toList();
 

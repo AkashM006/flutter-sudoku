@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
+import 'package:sudoku/models/sudoku.dart';
 import 'package:sudoku/providers/selected_item_provider.dart';
 import 'package:sudoku/providers/sudoku_table_provider.dart';
 import 'package:sudoku/widgets/sudoku/animated_rive_button.dart';

@@ -1,85 +1,36 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku/models/sudoku.dart';
+import 'package:sudoku/models/sudoku_game.dart';
 import 'package:sudoku/models/sudoku_level.dart';
+import 'package:sudoku/providers/provider_keys.dart';
 import 'package:sudoku/providers/selected_item_provider.dart';
+import 'package:sudoku/providers/shared_preference_provider.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
+import 'package:sudoku/utils/general_utils.dart';
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
-class History {
-  const History({
-    required this.cell,
-    required this.oldValue,
-    required this.newValue,
-  });
-
-  final SudokuCell cell;
-  final int oldValue;
-  final int newValue;
-}
-
-const numbers = [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-];
-
-List<List<int>> getNumbersMappedToIndices(List<List<int>>? table) {
-  if (table == null) return [[]];
-  List<int> expandedTable = table.expand((element) => element).toList();
-
-  final result = numbers.map(
-    (number) {
-      return expandedTable
-          .asMap()
-          .entries
-          .where((item) => item.value == number)
-          .map((e) => e.key)
-          .toList();
-    },
-  ).toList();
-
-  return result;
-}
-
-class Sudoku {
-  Sudoku({
-    List<List<int>>? init,
-    List<List<int>>? solution,
-    List<History>? history,
-    List<List<int>>? origin,
-  })  : initialState = init,
-        solutionState = solution,
-        originalUnFilledState = origin,
-        historyList = history ?? [],
-        solutionNumbersMappedToIndices = getNumbersMappedToIndices(solution);
-
-  List<List<int>>? initialState;
-  List<List<int>>? originalUnFilledState;
-  List<List<int>>? solutionState;
-  List<History> historyList = [];
-  List<List<int>>? solutionNumbersMappedToIndices;
-
-  Sudoku copyWith({init, solution, history, origin}) {
-    return Sudoku(
-      init: init ?? initialState,
-      solution: solution ?? solutionState,
-      history: history ?? historyList,
-      origin: origin ?? originalUnFilledState,
-    );
-  }
-}
+const key = sudokuTableProviderKey;
 
 class SudokuTableNotifier extends StateNotifier<Sudoku> {
-  SudokuTableNotifier(this.errorCountIncrementer, this.initGame)
-      : super(Sudoku());
+  SudokuTableNotifier(
+    this.sp,
+    this.errorCountIncrementer,
+    this.initGame,
+  ) : super(
+          sp.getString(sudokuTableProviderKey) != null
+              ? Sudoku.fromJson(
+                  jsonDecode(
+                    sp.getString(sudokuTableProviderKey)!,
+                  ),
+                )
+              : Sudoku(),
+        );
 
+  final SharedPreferences sp;
   final Function() errorCountIncrementer;
   final Function(
     int errorCount,
@@ -92,6 +43,7 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
     int permissibleErrorCount,
     Difficulty difficulty,
   ) {
+    // method start the sudoku
     final sudokuLevel = sudokuLevelMapping[difficulty]!;
     final missingNumbers = sudokuLevel.min +
         Random().nextInt(sudokuLevel.max - sudokuLevel.min + 1);
@@ -101,31 +53,25 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
     List<List<int>> question = sudokuGenerator.newSudoku;
     List<List<int>> answer = sudokuGenerator.newSudokuSolved;
 
-    state = Sudoku(
+    final result = Sudoku(
       init: question.map((e) => [...e]).toList(),
       solution: answer.map((e) => [...e]).toList(),
       history: <History>[],
       origin: question.map((e) => [...e]).toList(),
     );
 
+    encodeAndPersist(
+      sp,
+      key,
+      result,
+    );
+    state = result;
+
     initGame(0, 3, Duration.zero, difficulty);
   }
 
-  void setSudoku(
-    List<List<int>> init,
-    List<List<int>> solution,
-  ) {
-    List<History> history = [];
-
-    state = Sudoku(
-      init: init,
-      solution: solution,
-      origin: init.map((row) => [...row]).toList(),
-      history: history,
-    );
-  }
-
   void setSudokuItem(int row, int column, int data) {
+    // method used to set a sudoku cell item
     if (state.initialState![row][column] != state.solutionState![row][column]) {
       var updatedHistory = [...state.historyList];
       var updatedList = state.initialState!
@@ -148,11 +94,14 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
       );
       updatedList[row][column] = updatedList[row][column] == data ? 0 : data;
 
-      state = state.copyWith(init: updatedList, history: updatedHistory);
+      final result = state.copyWith(init: updatedList, history: updatedHistory);
+      encodeAndPersist(sp, key, result);
+      state = result;
     }
   }
 
   void undo() {
+    // method used to undo
     var updatedHistory = [...state.historyList];
     var updatedList = state.initialState!.map((row) => [...row]).toList();
 
@@ -163,16 +112,23 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
     updatedList[lastAction.cell.row][lastAction.cell.column] =
         lastAction.oldValue;
 
-    state = state.copyWith(init: updatedList, history: updatedHistory);
+    final result = state.copyWith(init: updatedList, history: updatedHistory);
+
+    encodeAndPersist(sp, key, result);
+
+    state = result;
   }
 
   void reset() {
-    state = Sudoku(
+    // method used to reset the sudoku state to start
+    final result = Sudoku(
       history: <History>[],
       init: state.originalUnFilledState,
       origin: state.originalUnFilledState,
       solution: state.solutionState,
     );
+    encodeAndPersist(sp, key, result);
+    state = result;
   }
 }
 
@@ -181,7 +137,8 @@ final sudokuTableProvider = StateNotifierProvider<SudokuTableNotifier, Sudoku>(
     final sudokuGame = ref.read(sudokuGameProvider.notifier);
     final errorCountIncrementer = sudokuGame.incrementErrorCount;
     final initGame = sudokuGame.init;
+    final sp = ref.watch(sharedPreferenceProvider);
 
-    return SudokuTableNotifier(errorCountIncrementer, initGame);
+    return SudokuTableNotifier(sp, errorCountIncrementer, initGame);
   },
 );
