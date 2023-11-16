@@ -1,2 +1,2 @@
 const sudokuGameProviderKey = 'sudokuGameProvider';
-const selectedItemProviderKey = 'selectedItemProvider';
+const sudokuSelectedItemProviderKey = 'selectedItemProvider';

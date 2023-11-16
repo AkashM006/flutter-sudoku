@@ -19,7 +19,8 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
   @override
   void initState() {
     super.initState();
-    ref.read(sudokuGameProvider.notifier).addListener((state) async {
+    removeErrorStateCheckListener =
+        ref.read(sudokuGameProvider.notifier).addListener((state) {
       // listen if mistakes become 3
       if (state.errorCount >= state.permissibleErrorCount) {
         ref.read(sudokuGameProvider.notifier).stop();
@@ -31,7 +32,8 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
       }
     });
 
-    ref.read(sudokuTableProvider.notifier).addListener((state) {
+    removeFilledStateCheckListener =
+        ref.read(sudokuTableProvider.notifier).addListener((state) {
       // listen if the sudoku has been filled
       final currentTable = state.initialState!.expand((row) => row).toList();
       final solutionTable = state.solutionState!.expand((row) => row).toList();
@@ -53,6 +55,16 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
         builder: (context) => const GameFinishedDialog(),
       );
     });
+  }
+
+  Function? removeErrorStateCheckListener;
+  Function? removeFilledStateCheckListener;
+
+  @override
+  void dispose() {
+    super.dispose();
+    removeErrorStateCheckListener?.call();
+    removeFilledStateCheckListener?.call();
   }
 
   @override

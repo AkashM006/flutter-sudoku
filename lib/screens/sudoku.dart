@@ -48,15 +48,15 @@ class SudokuScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SudokuTable(),
-                const SizedBox(
-                  height: 20,
-                ),
-                const SudokuActions(),
-                const SizedBox(
-                  height: 20,
-                ),
-                const SudokuNumPad(),
+                // const SudokuTable(),
+                // const SizedBox(
+                //   height: 20,
+                // ),
+                // const SudokuActions(),
+                // const SizedBox(
+                //   height: 20,
+                // ),
+                // const SudokuNumPad(),
               ],
             ),
           ),

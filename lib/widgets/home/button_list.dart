@@ -25,7 +25,7 @@ class ButtonList extends ConsumerWidget {
 
   void _continueHandler(context, WidgetRef ref) async {
     ref.read(sudokuGameProvider.notifier).start();
-    await Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const SudokuScreen(),

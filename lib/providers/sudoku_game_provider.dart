@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudoku/providers/provider_keys.dart';
 import 'package:sudoku/providers/shared_preference_provider.dart';
+import 'package:sudoku/utils/general_utils.dart';
 
 const oneSecond = Duration(seconds: 1);
 
@@ -12,6 +13,8 @@ enum Difficulty {
   medium,
   hard,
 }
+
+const key = sudokuGameProviderKey;
 
 class SudokuGame {
   const SudokuGame({
@@ -80,7 +83,6 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
                   errorCount: 0,
                   permissibleErrorCount: 3,
                   duration: Duration.zero,
-                  // difficulty: sudokuLevelMapping[Difficulty.easy]!,
                   difficulty: Difficulty.easy,
                 ),
         );
@@ -93,20 +95,25 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
     Duration duration,
     Difficulty difficulty,
   ) {
-    state = SudokuGame(
+    final result = SudokuGame(
       errorCount: errorCount,
       permissibleErrorCount: permissibleErrorCount,
       duration: duration,
       difficulty: difficulty,
     );
+    state = result;
+    // sp.setString(sudokuGameProviderKey, jsonEncode(result));
+    encodeAndPersist(sp, key, result);
     start();
   }
 
   void start() {
     timer = Timer.periodic(oneSecond, (timer) {
-      state = state.copyWith(
+      final result = state.copyWith(
         duration: state.duration + oneSecond,
       );
+      state = result;
+      sp.setString(sudokuGameProviderKey, jsonEncode(result));
     });
   }
 
@@ -116,19 +123,24 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
 
   void reset() {
     timer?.cancel();
-    state = state.copyWith(
+    final result = state.copyWith(
       errorCount: 0,
       permissibleErrorCount: 3,
       duration: Duration.zero,
     );
+    encodeAndPersist(sp, key, result);
+    state = result;
     timer = Timer.periodic(oneSecond, (timer) {
-      state = state.copyWith(duration: state.duration + oneSecond);
+      final result = state.copyWith(duration: state.duration + oneSecond);
+      encodeAndPersist(sp, key, result);
+      state = result;
     });
   }
 
   void incrementErrorCount() {
     final result = state.copyWith(errorCount: state.errorCount + 1);
-    sp.setString(sudokuGameProviderKey, jsonEncode(result));
+    // sp.setString(sudokuGameProviderKey, jsonEncode(result));
+    encodeAndPersist(sp, key, result);
     state = result;
   }
 }

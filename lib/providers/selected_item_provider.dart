@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudoku/providers/provider_keys.dart';
 import 'package:sudoku/providers/shared_preference_provider.dart';
+import 'package:sudoku/utils/general_utils.dart';
+
+const key = sudokuSelectedItemProviderKey;
 
 class SudokuCell {
   SudokuCell({required this.row, required this.column});
@@ -28,10 +31,10 @@ class SelectedItemNotifier extends StateNotifier<SudokuCell> {
   final SharedPreferences sp;
   SelectedItemNotifier(this.sp)
       : super(
-          sp.getString(selectedItemProviderKey) != null
+          sp.getString(key) != null
               ? SudokuCell.fromJson(
                   jsonDecode(
-                    sp.getString(selectedItemProviderKey)!,
+                    sp.getString(key)!,
                   ),
                 )
               : SudokuCell(
@@ -42,8 +45,9 @@ class SelectedItemNotifier extends StateNotifier<SudokuCell> {
 
   void setSelected(int row, int column) {
     final result = SudokuCell(row: row, column: column);
+    encodeAndPersist(sp, key, result);
     state = result;
-    sp.setString(selectedItemProviderKey, jsonEncode(result));
+    // sp.setString(selectedItemProviderKey, jsonEncode(result));
   }
 }
 
