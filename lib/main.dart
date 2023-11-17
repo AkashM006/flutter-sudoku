@@ -4,13 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudoku/providers/shared_preference_provider.dart';
 import 'package:sudoku/screens/home.dart';
 
-// todo:
-// 1. Handle the case where user finishes the sudoku correctly (Done)
-// 2. Persist state
-// 3. Continue button in the buttons list
-// 4. Disable button to the numbers if all of them filled correctly (Done)
-// 5. Instead of ElevatedButtons use TextButtons
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreference = await SharedPreferences.getInstance();
