@@ -14,9 +14,9 @@ class DifficultyItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
-      decoration: BoxDecoration(
-        color: neighboringColor.withOpacity(0.7),
-        borderRadius: const BorderRadius.all(radius),
+      decoration: const BoxDecoration(
+        color: customBackgroundColor,
+        borderRadius: BorderRadius.all(radius),
       ),
       child: InkWell(
         onTap: clickHandler,
@@ -30,7 +30,7 @@ class DifficultyItem extends StatelessWidget {
               Text(
                 difficulty,
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: selectedTextColor,
+                      color: customTextColor,
                     ),
               ),
               const Icon(

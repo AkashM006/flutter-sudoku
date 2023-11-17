@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sudoku/models/sudoku_level.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/screens/sudoku.dart';
 import 'package:sudoku/utils/sudoku_utils.dart';
@@ -37,36 +38,86 @@ class ButtonList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final sudokuGameTime = ref.watch(sudokuGameProvider).duration;
     final didGameExist = sudokuGameTime.inMilliseconds != 0;
+    final sudokuGameDifficulty = ref.watch(sudokuGameProvider).difficulty;
+    final gameDifficultyName = sudokuLevelMapping[sudokuGameDifficulty]!.title;
+    final sudokuDisplayTime = ref.watch(sudokuTimeProvider);
 
     List<Widget> children = [];
 
     if (didGameExist) {
       children.add(
         ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: neighboringColor,
-            foregroundColor: selectedTextColor,
-          ),
           onPressed: () => _continueHandler(context, ref),
-          child: const Text("Continue"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: customBackgroundColor,
+            padding: const EdgeInsets.all(15),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.play_arrow,
+                    color: customTextColor,
+                  ),
+                  Text(
+                    "Continue - $gameDifficultyName",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: customTextColor,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                sudokuDisplayTime,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: customTextColor,
+                ),
+              ),
+            ],
+          ),
         ),
       );
 
       children.add(
-        ElevatedButton(
+        TextButton.icon(
+          icon: const Icon(
+            Icons.add,
+            color: customTextColor,
+          ),
           onPressed: () => _newGameHandler(context, ref),
-          child: const Text('New Game'),
+          label: const Text(
+            'New Game',
+            style: TextStyle(
+              fontSize: 14,
+              color: customTextColor,
+            ),
+          ),
         ),
       );
     } else {
       children.add(
-        ElevatedButton(
-          onPressed: () => _newGameHandler(context, ref),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: neighboringColor,
-            foregroundColor: selectedTextColor,
+        ElevatedButton.icon(
+          icon: const Icon(
+            Icons.add,
+            color: customTextColor,
           ),
-          child: const Text('New Game'),
+          onPressed: () => _continueHandler(context, ref),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: customBackgroundColor,
+            padding: const EdgeInsets.all(15),
+          ),
+          label: const Text(
+            "New Game",
+            style: TextStyle(
+              fontSize: 16,
+              color: customTextColor,
+            ),
+          ),
         ),
       );
     }

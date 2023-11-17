@@ -13,8 +13,11 @@ const Map<String, BorderRadius?> itemBorderMapping = {
 const neighboringColor = Color(0xFFD4E2FF);
 const selectedColor = Color(0xFFABC5FE);
 const oddCellGroupColor = Color.fromARGB(255, 225, 225, 225);
-const selectedTextColor = Color(0xFF0d31f9);
+const selectedTextColor = Color(0xFF0D31F9);
 const wrongTextColor = Colors.red;
+
+const customTextColor = Color(0xFF627DCE);
+const customBackgroundColor = Color.fromARGB(255, 219, 228, 255);
 
 const strongBorder = BorderSide(
   color: Colors.black,
