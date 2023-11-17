@@ -50,6 +50,7 @@ class _SudokuErrorCounterState extends ConsumerState<SudokuErrorCounter> {
       if (!isFilledCorrectly) return;
 
       ref.read(sudokuGameProvider.notifier).stop();
+      ref.read(sudokuGameProvider.notifier).done();
       showDialog(
         context: context,
         barrierDismissible: false,

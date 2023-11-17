@@ -45,7 +45,6 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
       difficulty: difficulty,
     );
     state = result;
-    // sp.setString(sudokuGameProviderKey, jsonEncode(result));
     encodeAndPersist(sp, key, result);
     start();
   }
@@ -80,9 +79,16 @@ class SudokuGameNotifier extends StateNotifier<SudokuGame> {
     });
   }
 
+  void done() {
+    final result = state.copyWith(
+      status: Status.done,
+    );
+    encodeAndPersist(sp, key, result);
+    state = result;
+  }
+
   void incrementErrorCount() {
     final result = state.copyWith(errorCount: state.errorCount + 1);
-    // sp.setString(sudokuGameProviderKey, jsonEncode(result));
     encodeAndPersist(sp, key, result);
     state = result;
   }

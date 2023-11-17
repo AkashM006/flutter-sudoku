@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sudoku/models/sudoku_game.dart';
 import 'package:sudoku/models/sudoku_level.dart';
 import 'package:sudoku/providers/sudoku_game_provider.dart';
 import 'package:sudoku/screens/sudoku.dart';
@@ -36,8 +37,9 @@ class ButtonList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sudokuGameTime = ref.watch(sudokuGameProvider).duration;
-    final didGameExist = sudokuGameTime.inMilliseconds != 0;
+    final sudokuGame = ref.watch(sudokuGameProvider);
+    final didGameExist = sudokuGame.duration.inMilliseconds != 0 &&
+        sudokuGame.status == Status.pending;
     final sudokuGameDifficulty = ref.watch(sudokuGameProvider).difficulty;
     final gameDifficultyName = sudokuLevelMapping[sudokuGameDifficulty]!.title;
     final sudokuDisplayTime = ref.watch(sudokuTimeProvider);
@@ -106,10 +108,9 @@ class ButtonList extends ConsumerWidget {
             Icons.add,
             color: customTextColor,
           ),
-          onPressed: () => _continueHandler(context, ref),
+          onPressed: () => _newGameHandler(context, ref),
           style: ElevatedButton.styleFrom(
             backgroundColor: customBackgroundColor,
-            padding: const EdgeInsets.all(15),
           ),
           label: const Text(
             "New Game",

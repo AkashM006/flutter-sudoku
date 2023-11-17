@@ -4,12 +4,18 @@ enum Difficulty {
   hard,
 }
 
+enum Status {
+  pending,
+  done,
+}
+
 class SudokuGame {
   const SudokuGame({
     required this.errorCount,
     required this.permissibleErrorCount,
     required this.duration,
     required this.difficulty,
+    this.status = Status.pending,
   });
 
   final int errorCount;
@@ -17,12 +23,14 @@ class SudokuGame {
   final Difficulty difficulty;
 
   final Duration duration;
+  final Status status;
 
   SudokuGame copyWith({
     errorCount,
     permissibleErrorCount,
     duration,
     difficulty,
+    status,
   }) {
     return SudokuGame(
       errorCount: errorCount ?? this.errorCount,
@@ -30,6 +38,7 @@ class SudokuGame {
           permissibleErrorCount ?? this.permissibleErrorCount,
       duration: duration ?? this.duration,
       difficulty: difficulty ?? this.difficulty,
+      status: status ?? this.status,
     );
   }
 
@@ -43,6 +52,9 @@ class SudokuGame {
       difficulty: json['difficulty'] != null
           ? Difficulty.values.elementAt(json['difficulty'])
           : Difficulty.easy,
+      status: json['status'] != null
+          ? Status.values.elementAt(json['status'])
+          : Status.pending,
     );
   }
 
@@ -52,6 +64,7 @@ class SudokuGame {
       'permissibleErrorCount': permissibleErrorCount,
       "duration": duration.inMilliseconds,
       "difficulty": difficulty.index,
+      "status": status.index,
     };
   }
 }
