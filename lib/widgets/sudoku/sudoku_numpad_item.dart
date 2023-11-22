@@ -24,6 +24,10 @@ class SudokuNumpadItem extends ConsumerWidget {
           .setSudokuItem(selectedValues.row, selectedValues.column, number);
     }
 
+    if (disabled) {
+      return Expanded(child: Container());
+    }
+
     return Expanded(
       child: Container(
         margin: const EdgeInsets.only(right: 8),
@@ -44,8 +48,7 @@ class SudokuNumpadItem extends ConsumerWidget {
                 number.toString(),
                 style: const TextStyle().copyWith(
                   fontSize: 24,
-                  color:
-                      disabled ? Colors.black.withOpacity(0.2) : Colors.black,
+                  color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
               ),

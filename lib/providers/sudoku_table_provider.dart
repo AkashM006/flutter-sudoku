@@ -80,7 +80,8 @@ class SudokuTableNotifier extends StateNotifier<Sudoku> {
           )
           .toList();
 
-      if (updatedList[row][column] != data &&
+      if (data != 0 &&
+          updatedList[row][column] != data &&
           data != state.solutionState![row][column]) {
         errorCountIncrementer();
       }
